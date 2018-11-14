@@ -55,6 +55,7 @@ export default {
             border-radius 4px
             transition all .25s
             cursor pointer
+            margin 0 .1em
         button:hover
             transform scale(1.1) 
         button:active
