@@ -5,7 +5,7 @@
 </template>
 
 <script>
-import Home from './components/Home'
+import Home from './components/Home' 
 
 export default {
   name: 'App',
@@ -15,6 +15,6 @@ export default {
 }
 </script>
 
-<style>
+<style lang="stylus" scoped>
 
 </style>
