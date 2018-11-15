@@ -3,14 +3,17 @@
         <div class="header">
             <div class="head-search">
                 <div class="btn-box">
-                    <button class="iconfont">&#xe650;</button>
-                    <button class="iconfont">&#xe658;</button>
-                    <button class="iconfont">&#xe603;</button>
-                    <button class="iconfont">&#xe60e;</button>
+                    <button class="iconfont mGreen" @click="complClick()">&#xe650;</button>
+                    <button class="iconfont mRed" @click="unComplClick()">&#xe658;</button>
+                    <button class="iconfont mYellow" @click="colleClick()">&#xe600;</button>
+                    <button class="iconfont mPink" @click="showAllClick()">&#xe603;</button> 
+                    <router-link to="/Edit">
+                        <button class="iconfont mBlue" >&#xe60e;</button>
+                    </router-link>
                 </div>
                 <div class="search-box">
-                    <input type="text" name="" id="" placeholder="搜索/标题/时间">
-                    <button class="iconfont">&#xe651;</button>
+                    <input type="text" name="" id="" placeholder="搜索/标题/时间" >
+                    <button class="iconfont mRed">&#xe651;</button>
                 </div>
             </div>
         </div>
@@ -23,6 +26,17 @@ export default {
     data:function(){
         return {
 
+        }
+    },
+    methods:{
+        complClick(){
+            this.$store.commit("completed", "complete") 
+        },
+        unComplClick(){
+            this.$store.commit("completed", "uncomplete")  
+        },
+        colleClick(){
+            this.$store.commit("completed", "isStar")  
         }
     }
 }
@@ -47,27 +61,22 @@ export default {
         .btn-box 
             display inline-block 
         button
-            width 1rem
-            height .6rem
-            line-height .6rem
-            text-align center
-            color #fff
-            border-radius 4px
-            transition all .25s
-            cursor pointer
-            margin 0 .1em
+            $btn()
         button:hover
             transform scale(1.1) 
         button:active
             transform scale(.8)
-        button:nth-child(1)
+        .mGreen
             background $mGreen
-        button:nth-child(2)
+        .mRed
             background $mRed
-        button:nth-child(3)
+        .mYellow
+            margin-right .8rem
             background $mYellow
-        button:nth-child(4)
+        .mBlue
             background $mBlue 
+        .mPink
+            background $mPink
         .search-box
             display flex
             flex 1
@@ -76,13 +85,8 @@ export default {
             input 
                 width 80%
                 font-size .4rem
-                padding .1rem .3rem
-                color #fff 
                 font-weight 100
-                background none 
-                border 1px solid #000
-                border-bottom 1px solid rgba(255,255,255,.3)
-                border-radius 4px
+                $inputStyle()
                 margin-right .5rem  
  
 </style>
