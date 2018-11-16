@@ -11,6 +11,7 @@
                 </div>
             </div>
         </div>
+        <div  class="info" :style="show">{{information}}成功</div>
         <div class="title">
             <input type="text" placeholder="请输入标题 " maxlength="20" v-model="article.title">
         </div>
@@ -20,15 +21,16 @@
         </div>
         <div class="btn-box">
             <div>
-                <button class="iconfont mGreen" >&#xe650;<span>保存</span></button>
-                <button class="iconfont mRed" @click="checkCover">&#xe658;<span>取消</span></button>
+                <button class="iconfont mGreen"  @click="checkCover" data-key="save">&#xe650; 保存 </button>
+                <button class="iconfont mRed" @click="checkCover" data-key="cancle">&#xe658; 取消 </button>
             </div>
             <div>
-                <span class="time">2018/10/10 - 星期三</span>
+                <span class="time">{{article.date}} - {{article.week}}</span>
             </div>
             <div>
-                <button class="iconfont mYellow font-larg" @click="checkCover">&#xe600;</button>
-                <button class="iconfont mBlue " @click="checkCover">完成</button>
+                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="unstar" v-if="article.isStar">1&#xe601;</button>
+                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="star" v-else>2&#xe600;</button>
+                <button class="iconfont mBlue " @click="checkCover" data-key="complete">完成</button>
             </div>
         </div>
     </div>
@@ -40,18 +42,43 @@ export default {
     data:function(){
         return { 
             cover: false,
-            article:[]
+            article:[],
+            information:"收藏",
+            active: false, 
+            show:{animation: "hidden forwards 1s 1s"}
         }
     },
     methods:{
-        checkCover(){
+        checkCover(e){
             // 点击取消编辑 弹出模态框
-            this.cover = true
+
+            var state = e.target.getAttribute("data-key")  
+                console.log(state)
+                if(state == "save" || state == "star" || state == "unstar"){ 
+                    this.info()
+
+                }else{
+                    this.cover = true
+                    
+                } 
+            
+ 
         },
         cancelCover(){
             // 模态框取消 返回继续编辑
             this.cover = false
         }, 
+        info(){
+            // 提示框
+            console.log("info")
+            this.active = !this.active
+            if(this.active){
+                this.show = {animation: "hidden forwards 1s 1s"}
+            }else{
+                this.show = ""
+            }
+
+        }
     },
     mounted() {
         try {
@@ -72,6 +99,34 @@ export default {
     width 100%
     height 100%
     background $mMain
+    .info
+        z-index -10
+        position absolute
+        top 0
+        bottom 0
+        right 0
+        left 0
+        width 30%
+        height 3em
+        opacity 0
+        font-size 1.5em
+        line-height 3em
+        color #fff
+        text-align center
+        border-radius 5px
+        background #70868e
+        margin auto
+        transition .25s all   
+    @keyframes hidden {
+        0%{
+            opacity .8
+            z-index 20
+        }
+        100%{ 
+            opacity 0
+            z-index -9
+        }
+    }
     .title
         width 50%
         height 1rem
@@ -108,9 +163,7 @@ export default {
             font-size 1.5em
         button
             $btn()
-            width 2rem
-            span
-                margin-left .5em
+            width 2rem 
         .mGreen
             background $mGreen
         .mRed
