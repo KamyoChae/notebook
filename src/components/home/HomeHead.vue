@@ -30,13 +30,16 @@ export default {
     },
     methods:{
         complClick(){
-            this.$store.commit("completed", "complete") 
+            this.$store.commit("filterFn", "complete") 
         },
         unComplClick(){
-            this.$store.commit("completed", "uncomplete")  
+            this.$store.commit("filterFn", "uncomplete")  
         },
         colleClick(){
-            this.$store.commit("completed", "isStar")  
+            this.$store.commit("filterFn", "isStar")  
+        },
+        showAllClick(){
+            this.$store.commit("showAll") 
         }
     }
 }

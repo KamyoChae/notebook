@@ -12,15 +12,24 @@
             </div>
         </div>
         <div class="title">
-            <input type="text" placeholder="请输入标题 " maxlength="20">
+            <input type="text" placeholder="请输入标题 " maxlength="20" v-model="article.title">
         </div>
 
         <div class="innerText">
-            <textarea name="" id="" cols="30" rows="16" maxlength="1000"></textarea>
+            <textarea name="" id="" cols="30" rows="16" maxlength="1000" v-text="article.text"></textarea>
         </div>
         <div class="btn-box">
-            <button class="iconfont mGreen" >&#xe650;</button>
-            <button class="iconfont mRed" @click="checkCover">&#xe658;</button>
+            <div>
+                <button class="iconfont mGreen" >&#xe650;<span>保存</span></button>
+                <button class="iconfont mRed" @click="checkCover">&#xe658;<span>取消</span></button>
+            </div>
+            <div>
+                <span class="time">2018/10/10 - 星期三</span>
+            </div>
+            <div>
+                <button class="iconfont mYellow font-larg" @click="checkCover">&#xe600;</button>
+                <button class="iconfont mBlue " @click="checkCover">完成</button>
+            </div>
         </div>
     </div>
 </template>
@@ -29,8 +38,9 @@
 export default {
     name:"Edit", 
     data:function(){
-        return {
-            cover: false
+        return { 
+            cover: false,
+            article:[]
         }
     },
     methods:{
@@ -42,7 +52,15 @@ export default {
             // 模态框取消 返回继续编辑
             this.cover = false
         }, 
-    }
+    },
+    mounted() {
+        try {
+            this.article = this.$store.state.article[0]
+            console.log(this.$store.state.article[0])
+        } catch (error) {
+            
+        }
+    },
 }
 </script>
 
@@ -59,31 +77,53 @@ export default {
         height 1rem
         line-height 1rem
         font-size .5rem 
+        opacity .9
         margin 1rem auto
         input 
             width 100% 
             $inputStyle()
             text-align center
+            letter-spacing .1em
     .innerText, .btn-box
         width 70% 
         margin auto 
         textarea
+            box-sizing border-box
             width 100% 
             line-height 1.8em
+            font-size .32rem
             $inputStyle()
+            letter-spacing .1em
+            opacity .9
             padding-top .3rem
     .btn-box
+        display flex
+        justify-content space-between 
         margin 1rem auto
+        .time
+            $inputStyle()
+            $btn()
+            $noSelect()
+        .font-larg
+            font-size 1.5em
         button
             $btn()
             width 2rem
+            span
+                margin-left .5em
         .mGreen
             background $mGreen
         .mRed
             background $mRed
+        .mYellow 
+            background $mYellow
+        .mBlue
+            background $mBlue
         button:active
             transform scale(.8)
+
     .cover
+        z-index 20
         position absolute
         overflow hidden
         width 100%

@@ -1,14 +1,17 @@
 <template> 
     <div class="wrapper">
         <div class="time-month" v-for="(items, indexs) in this.$store.state.rederArr" :key="items.allDate">
-            <div class="time-box">
+            <div class="time-box" v-if="items.pages.length">
                 <i class="iconfont">&#xe665;</i>
                 <i>{{items.allDate}}</i>
             </div>
 
             
-            <router-link to="/Edit"  v-for="(item, index) in items.pages" :key="item.id">
-                <div class="list-item">
+            <router-link to="/Edit"  
+                v-for="(item, index) in items.pages" 
+                :key="item.id" 
+            >
+                <div class="list-item" @click="checkLink(item.id)">
                     <div class="item-data">
                         <span>{{item.date}}</span>
                         <span>{{item.week}}</span>
@@ -16,9 +19,9 @@
                         <span>{{item.state}}</span>
                         <span>完成状态</span>
                         <span>{{item.completeState}}</span>
-                    </div> 
+                    </div>
                     <p>{{item.title}}</p>
-                    <div class="delete-box">
+                    <div class="delete-box" @click.stop="">
                         <i class="iconfont starIcon" @click.prevent="clickStar(index, indexs)"   v-if="item.isStar">&#xe601;</i>
                         <i class="iconfont starIcon" @click.prevent="clickStar(index, indexs)"   v-else>&#xe600;</i>
                         <i class="iconfont" @click.prevent="deleteItem(index, indexs)">&#xe658;</i>
@@ -52,8 +55,15 @@ export default {
             var pages = this.$store.state.rederArr[indexs].pages 
             pages.splice(index, 1)
         },
+
+        checkLink(val){ 
+            this.$store.commit("clickArticle", val) 
+        }
          
     }, 
+    mounted() {
+        this.$store.state.rederArr = this.$store.state.res
+    },
 
 }
 </script>
