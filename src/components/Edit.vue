@@ -11,7 +11,7 @@
                 </div>
             </div>
         </div>
-        <div  class="info" :style="show">{{information}}成功</div>
+        <div  :class=" ['info', 'show', {topa: active}]"  >{{information}}成功</div>
         <div class="title">
             <input type="text" placeholder="请输入标题 " maxlength="20" v-model="article.title">
         </div>
@@ -25,7 +25,8 @@
                 <button class="iconfont mRed" @click="checkCover" data-key="cancle">&#xe658; 取消 </button>
             </div>
             <div>
-                <span class="time">{{article.date}} - {{article.week}}</span>
+                <span class="time" v-if="article.date">{{article.date}}</span>
+                <span class="time" v-else>{{stateTime.time}} - {{stateTime.week}}</span>
             </div>
             <div>
                 <button class="iconfont mYellow font-larg" @click="checkCover" data-key="unstar" v-if="article.isStar">1&#xe601;</button>
@@ -42,10 +43,11 @@ export default {
     data:function(){
         return { 
             cover: false,
-            article:[],
+            article:{},
             information:"收藏",
-            active: false, 
-            show:{animation: "hidden forwards 1s 1s"}
+            active: true, 
+            cou:1,
+            stateTime: "", 
         }
     },
     methods:{
@@ -70,23 +72,28 @@ export default {
         }, 
         info(){
             // 提示框
-            console.log("info")
-            this.active = !this.active
-            if(this.active){
-                this.show = {animation: "hidden forwards 1s 1s"}
-            }else{
-                this.show = ""
+            
+            this.cou += 1  
+            if(this.cou){
+            var that = this
+            console.log("info") 
+            this.active = Boolean(that.cou)
             }
-
+            
         }
     },
-    mounted() {
+    mounted() { 
         try {
-            this.article = this.$store.state.article[0]
-            console.log(this.$store.state.article[0])
+            
+            // 放到这里没输出 控制台什么也没有
+            this.stateTime = this.$store.state.stateTime  // stateTime 默认值为66 
+            console.log(this.stateTime)
+            this.article = this.$store.state.article[0] 
+
         } catch (error) {
             
         }
+ 
     },
 }
 </script>
@@ -115,18 +122,22 @@ export default {
         text-align center
         border-radius 5px
         background #70868e
-        margin auto
-        transition .25s all   
-    @keyframes hidden {
-        0%{
-            opacity .8
-            z-index 20
+        margin auto 
+    .topa
+        opacity .8
+        z-index 20
+    .show
+        animation hidden 2s forwards
+        @keyframes hidden {
+            0%{
+                opacity .8
+                z-index 20
+            }
+            100%{ 
+                opacity 0
+                z-index -9
+            }
         }
-        100%{ 
-            opacity 0
-            z-index -9
-        }
-    }
     .title
         width 50%
         height 1rem

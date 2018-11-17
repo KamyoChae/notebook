@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import { stat } from 'fs';
 
 Vue.use(Vuex)
 
@@ -18,7 +17,7 @@ export default new Vuex.Store({
                 "complete": false,
                 "uncomplete": true,
                 "isStar": false,
-                "title": "中午写一篇文章，顺便更新一下博客博客博客",
+                "title": "中午写一c新一下博客博客博客",
                 "text": "文章内容在这里..."
             }, {
                 "id": "20154513",
@@ -29,7 +28,7 @@ export default new Vuex.Store({
                 "complete": true,
                 "uncomplete": true,
                 "isStar": false,
-                "title": "中午写一篇文章，顺便更新一下博客博客博客",
+                "title": "中午写一b章，顺便更新一下博客博客博客",
                 "text": "文章内容在这里..."
             }, {
                 "id": "2015422",
@@ -40,7 +39,7 @@ export default new Vuex.Store({
                 "complete": true,
                 "uncomplete": true,
                 "isStar": true,
-                "title": "中午写一篇文章，顺便更新一下博客博客博客",
+                "title": "中午写d新一下博客博客博客",
                 "text": "文章内容在这里..."
             }, {
                 "id": "20154612",
@@ -87,12 +86,13 @@ export default new Vuex.Store({
                 "complete": true,
                 "uncomplete": true,
                 "isStar": false,
-                "title": "中午写一篇文章，顺便更新一下博客博客博客",
+                "title": "aa新一下博客博客博客",
                 "text": "文章内容在这里..."
             }]
         }],
         rederArr: [], // 渲染数组 
-        article: null, //存储文章
+        article: null, //存储文章数组
+        stateTime:{time:"这么机智的嘛",week:"哟"}, // 存储文本创建时间
     },
 
     mutations: {
@@ -103,6 +103,26 @@ export default new Vuex.Store({
             state.res.forEach(ele => { // 遍历列表
                 if (Object.prototype.toString.call(ele.pages) == "[object Array]") { // 如果列表里面的pages属性是一个数组的话
                     item = ele.pages.filter(el => el[val] == true) // 遍历这个数组 将complete为true的对象存进item item就是一个数组
+                    if (item) { // 容错处理 
+                        obj.allDate = ele.allDate // 将遍历的对象的日期存进临时对象
+                        obj.pages = item
+                    }
+                }
+
+                if (JSON.stringify(obj) !== "{}") {
+                    state.rederArr.push(obj)
+                    obj = {}
+                    item = null
+                }
+            })
+        },
+        filterInput(state, val){
+            state.rederArr = []
+            var item = null
+            var obj = {}
+            state.res.forEach(ele => { // 遍历列表
+                if (Object.prototype.toString.call(ele.pages) == "[object Array]") { // 如果列表里面的pages属性是一个数组的话
+                    item = ele.pages.filter(el => el["title"].indexOf(val) !== -1) // 遍历这个数组 将complete为true的对象存进item item就是一个数组
                     if (item) { // 容错处理 
                         obj.allDate = ele.allDate // 将遍历的对象的日期存进临时对象
                         obj.pages = item
@@ -132,6 +152,10 @@ export default new Vuex.Store({
                     }
                 }
             })
-        }
+        },
+
+        getDate(state, val){
+            state.stateTime = val
+        },
     }
 })

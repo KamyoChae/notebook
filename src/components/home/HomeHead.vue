@@ -6,14 +6,11 @@
                     <button class="iconfont mGreen" @click="complClick()">&#xe650;</button>
                     <button class="iconfont mRed" @click="unComplClick()">&#xe658;</button>
                     <button class="iconfont mYellow" @click="colleClick()">&#xe600;</button>
-                    <button class="iconfont mPink" @click="showAllClick()">&#xe603;</button> 
-                    <router-link to="/Edit">
-                        <button class="iconfont mBlue" >&#xe60e;</button>
-                    </router-link>
+                    <button class="iconfont mPink" @click="showAllClick()">&#xe603;</button>  
+                    <button class="iconfont mBlue" @click="toEdit()">&#xe60e;</button> 
                 </div>
                 <div class="search-box">
-                    <input type="text" name="" id="" placeholder="搜索/标题/时间" >
-                    <button class="iconfont mRed">&#xe651;</button>
+                    <input type="text" name="" id="" placeholder="搜索|标题" v-model="value"> 
                 </div>
             </div>
         </div>
@@ -25,7 +22,7 @@ export default {
     name:"HomeHead", 
     data:function(){
         return {
-
+            value:""
         }
     },
     methods:{
@@ -40,6 +37,38 @@ export default {
         },
         showAllClick(){
             this.$store.commit("showAll") 
+        },
+        toEdit(){
+            this.$router.push("/Edit")
+            var time = this.getEditDate() 
+            this.$store.commit("getDate", time)
+
+        },
+
+        getEditDate(){
+            var date = new Date()
+            var time = date.toLocaleDateString()
+            var weekNative = date.getDay()
+            var week = ""
+            switch(weekNative){
+                case 0 : week = "星期日";break;
+                case 1 : week = "星期一";break;
+                case 2 : week = "星期二";break;
+                case 3 : week = "星期三";break;
+                case 4 : week = "星期四";break;
+                case 5 : week = "星期五";break;
+                case 6 : week = "星期六";break;
+            }
+            return  {
+                time:time,
+                week:week
+            } 
+        }
+
+    },
+    watch:{
+        value(newVal,oldVal){
+              this.$store.commit("filterInput", newVal) 
         }
     }
 }
@@ -89,7 +118,6 @@ export default {
                 width 80%
                 font-size .4rem
                 font-weight 100
-                $inputStyle()
-                margin-right .5rem  
+                $inputStyle() 
  
 </style>
