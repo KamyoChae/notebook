@@ -2,7 +2,7 @@
     <div class="wrapper">
         <div class="cover" v-show="cover">
             <div class="box-check">
-                <span>您确定要放弃编辑吗？(确定将返回首页)</span>
+                <span>{{btnInfo}}</span>
                 <div class="check-btn"> 
                     <router-link to="/">
                         <button class="iconfont mGreen">&#xe650;</button>
@@ -11,13 +11,16 @@
                 </div>
             </div>
         </div>
-        <div  :class=" ['info', 'show', {topa: active}]"  >{{information}}成功</div>
+        
         <div class="title">
-            <input type="text" placeholder="请输入标题 " maxlength="20" v-model="article.title">
+            
+            <input type="text" placeholder="请输入标题 " maxlength="20" v-if="article.title" v-model="article.title">
+            <input type="text" placeholder="请输入标题 " maxlength="20" v-else v-model="title">
         </div>
 
         <div class="innerText">
-            <textarea name="" id="" cols="30" rows="16" maxlength="1000" v-text="article.text"></textarea>
+            <textarea name="" id="" cols="30" rows="16" maxlength="1000"  v-if="article.title" v-model="article.text"></textarea>
+             <textarea name="" id="" cols="30" rows="16" maxlength="1000"  v-else v-model="text"></textarea>
         </div>
         <div class="btn-box">
             <div>
@@ -29,9 +32,10 @@
                 <span class="time" v-else>{{stateTime.time}} - {{stateTime.week}}</span>
             </div>
             <div>
-                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="unstar" v-if="article.isStar">1&#xe601;</button>
-                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="star" v-else>2&#xe600;</button>
-                <button class="iconfont mBlue " @click="checkCover" data-key="complete">完成</button>
+                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="unstar" v-if="article.isStar">&#xe601;</button>
+                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="star" v-else>&#xe600;</button>
+                <button class="iconfont mGreen " @click="checkCover" data-key="complete">完成了</button>
+                <button class="iconfont mRed " @click="checkCover" data-key="umcomplete">没完成</button>
             </div>
         </div>
     </div>
@@ -48,50 +52,65 @@ export default {
             active: true, 
             cou:1,
             stateTime: "", 
+            btnInfo:"您确定要放弃编辑吗？(确定将返回首页)",
+          
+            title:"", // 用于存储文章标题
+            text:"", // 用于存储文章内容
+            id:"",
+            date:"",
+            week:"",
+            state:"执行中", 
+            complete:false,
+            uncomplete:true,
+            isStar:false,
+            
         }
     },
     methods:{
         checkCover(e){
             // 点击取消编辑 弹出模态框
 
-            var state = e.target.getAttribute("data-key")  
-                console.log(state)
-                if(state == "save" || state == "star" || state == "unstar"){ 
-                    this.info()
-
-                }else{
-                    this.cover = true
-                    
+            var state = e.target.getAttribute("data-key")   
+            if(state == "star" || state == "unstar"){ 
+                this.starThis() 
+            }else{
+                switch(state){
+                    case "save":this.btnInfo = "保存成功！是否返回首页？"
+                                this.$store.commit("addNewItem")
+                                break
+                    case "cancle":this.btnInfo = "您确定要放弃编辑吗？(确定将返回首页)"
+                                break
+                    case "complete":this.btnInfo = "任务完成！是否返回首页？"
+                                break
+                    case "umcomplete":this.btnInfo = "任务取消！是否返回首页？"
+                                break
                 } 
-            
- 
+                this.cover = true
+                
+            }  
         },
         cancelCover(){
             // 模态框取消 返回继续编辑
             this.cover = false
-        }, 
-        info(){
-            // 提示框
-            
-            this.cou += 1  
-            if(this.cou){
-            var that = this
-            console.log("info") 
-            this.active = Boolean(that.cou)
-            }
-            
+        },  
+        starThis(){
+            this.$store.commit("toStar") 
+        },
+        editInit(){
+            this.date = this.$store.state.stateTime.time
+            this.week = this.$store.state.stateTime.week
+            this.id = this.$store.state.stateTime.id 
         }
     },
     mounted() { 
         try {
-            
+            // 从系统拿数据 没有传数据就执行初始化
             // 放到这里没输出 控制台什么也没有
-            this.stateTime = this.$store.state.stateTime  // stateTime 默认值为66 
-            console.log(this.stateTime)
+            this.stateTime = this.$store.state.stateTime  // stateTime 默认值为66  
             this.article = this.$store.state.article[0] 
-
         } catch (error) {
-            
+            this.article = {}
+            this.editInit()
         }
  
     },
@@ -105,39 +124,7 @@ export default {
     overflow hidden
     width 100%
     height 100%
-    background $mMain
-    .info
-        z-index -10
-        position absolute
-        top 0
-        bottom 0
-        right 0
-        left 0
-        width 30%
-        height 3em
-        opacity 0
-        font-size 1.5em
-        line-height 3em
-        color #fff
-        text-align center
-        border-radius 5px
-        background #70868e
-        margin auto 
-    .topa
-        opacity .8
-        z-index 20
-    .show
-        animation hidden 2s forwards
-        @keyframes hidden {
-            0%{
-                opacity .8
-                z-index 20
-            }
-            100%{ 
-                opacity 0
-                z-index -9
-            }
-        }
+    background $mMain 
     .title
         width 50%
         height 1rem
@@ -175,6 +162,8 @@ export default {
         button
             $btn()
             width 2rem 
+        button:hover
+            transform scale(1.1)
         .mGreen
             background $mGreen
         .mRed

@@ -33,7 +33,7 @@ export default {
             this.$store.commit("filterFn", "uncomplete")  
         },
         colleClick(){
-            this.$store.commit("filterFn", "isStar")  
+            this.$store.commit("filterFn", "isStar")
         },
         showAllClick(){
             this.$store.commit("showAll") 
@@ -48,6 +48,7 @@ export default {
         getEditDate(){
             var date = new Date()
             var time = date.toLocaleDateString()
+            var id = Date.now()
             var weekNative = date.getDay()
             var week = ""
             switch(weekNative){
@@ -61,14 +62,15 @@ export default {
             }
             return  {
                 time:time,
-                week:week
+                week:week,
+                id:id
             } 
         }
 
     },
     watch:{
         value(newVal,oldVal){
-              this.$store.commit("filterInput", newVal) 
+              this.$store.commit("filterFn", newVal) 
         }
     }
 }

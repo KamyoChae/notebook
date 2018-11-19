@@ -16,9 +16,7 @@
                         <span>{{item.date}}</span>
                         <span>{{item.week}}</span>
                         <span>当前状态</span>
-                        <span>{{item.state}}</span>
-                        <span>完成状态</span>
-                        <span>{{item.completeState}}</span>
+                        <span>{{item.state}}</span> 
                     </div>
                     <p>{{item.title}}</p>
                     <div class="delete-box" @click.stop="">
