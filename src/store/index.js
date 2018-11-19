@@ -85,7 +85,7 @@ export default new Vuex.Store({
         }],
         rederArr: [], // 渲染数组 
         article: null, //存储文章数组
-        stateTime:{time:"这么机智的嘛",week:"哟", id:""}, // 存储文本创建时间
+        stateTime:{time:"这么机智的嘛",week:"哟" }, // 存储文本创建时间
         indexArticle:{}, // 用于收藏 标识 里面有两个索引 第一个是时间索引 第二个是位置索引
         newId:"", // 点击文章后更新的文章id
     },

@@ -40,6 +40,8 @@ export default {
         },
         toEdit(){
             this.$router.push("/Edit")
+            
+            this.$store.state.article = ""
             var time = this.getEditDate() 
             this.$store.commit("getDate", time)
 

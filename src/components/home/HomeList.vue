@@ -19,7 +19,7 @@
                         <span>{{item.state}}</span> 
                     </div>
                     <p>{{item.title}}</p>
-                    <div class="delete-box" @click.stop="">
+                    <div class="delete-box" >
                         <i class="iconfont starIcon" @click.prevent="clickStar(index, indexs)"   v-if="item.isStar">&#xe601;</i>
                         <i class="iconfont starIcon" @click.prevent="clickStar(index, indexs)"   v-else>&#xe600;</i>
                         <i class="iconfont" @click.prevent="deleteItem(index, indexs)">&#xe658;</i>

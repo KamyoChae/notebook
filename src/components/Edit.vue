@@ -12,14 +12,14 @@
             </div>
         </div>
         
-        <div class="title">
+        <div class="titles">
             
-            <input type="text" placeholder="请输入标题 " maxlength="20" v-if="article.title" v-model="article.title">
+            <input type="text" placeholder="请输入标题 " maxlength="20" v-if="!newArticle" v-text="article.title" v-model="title">
             <input type="text" placeholder="请输入标题 " maxlength="20" v-else v-model="title">
         </div>
 
         <div class="innerText">
-            <textarea name="" id="" cols="30" rows="16" maxlength="1000"  v-if="article.title" v-model="article.text"></textarea>
+            <textarea name="" id="" cols="30" rows="16" maxlength="1000"  v-if="!newArticle" v-text="article.text" v-model="text"></textarea>
              <textarea name="" id="" cols="30" rows="16" maxlength="1000"  v-else v-model="text"></textarea>
         </div>
         <div class="btn-box">
@@ -28,11 +28,11 @@
                 <button class="iconfont mRed" @click="checkCover" data-key="cancle">&#xe658; 取消 </button>
             </div>
             <div>
-                <span class="time" v-if="article.date">{{article.date}}</span>
+                <span class="time" v-if="!newArticle">{{article.date}} - {{article.week}}</span>
                 <span class="time" v-else>{{stateTime.time}} - {{stateTime.week}}</span>
             </div>
             <div>
-                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="unstar" v-if="article.isStar">&#xe601;</button>
+                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="unstar" v-if="!newArticle">&#xe601;</button>
                 <button class="iconfont mYellow font-larg" @click="checkCover" data-key="star" v-else>&#xe600;</button>
                 <button class="iconfont mGreen " @click="checkCover" data-key="complete">完成了</button>
                 <button class="iconfont mRed " @click="checkCover" data-key="umcomplete">没完成</button>
@@ -45,12 +45,12 @@
 export default {
     name:"Edit", 
     data:function(){
-        return { 
+        return {
             cover: false,
             article:{},
             information:"收藏",
             active: true, 
-            cou:1,
+            newArticle:true,
             stateTime: "", 
             btnInfo:"您确定要放弃编辑吗？(确定将返回首页)",
           
@@ -97,22 +97,31 @@ export default {
             this.$store.commit("toStar") 
         },
         editInit(){
+            console.log(this.$store.state.stateTime)
             this.date = this.$store.state.stateTime.time
             this.week = this.$store.state.stateTime.week
             this.id = this.$store.state.stateTime.id 
         }
     },
     mounted() { 
-        try {
+        
+        try {  
             // 从系统拿数据 没有传数据就执行初始化
-            // 放到这里没输出 控制台什么也没有
+            // 放到这里没输出 控制台什么也没有 
             this.stateTime = this.$store.state.stateTime  // stateTime 默认值为66  
             this.article = this.$store.state.article[0] 
+            if(this.article){ 
+                
+                this.newArticle = false
+                
+                console.log(this.newArticle)
+            }
         } catch (error) {
-            this.article = {}
             this.editInit()
-        }
- 
+        } 
+    }, 
+    destroyed() {
+        this.newArticle = true 
     },
 }
 </script>
@@ -125,7 +134,7 @@ export default {
     width 100%
     height 100%
     background $mMain 
-    .title
+    .titles
         width 50%
         height 1rem
         line-height 1rem
