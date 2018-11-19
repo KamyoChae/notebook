@@ -14,12 +14,12 @@
         
         <div class="titles">
             
-            <input type="text" placeholder="请输入标题 " maxlength="20" v-if="!newArticle" v-text="article.title" v-model="title">
+            <input type="text" placeholder="请输入标题 " maxlength="20" v-if="!newArticle"  v-model="title">
             <input type="text" placeholder="请输入标题 " maxlength="20" v-else v-model="title">
         </div>
 
         <div class="innerText">
-            <textarea name="" id="" cols="30" rows="16" maxlength="1000"  v-if="!newArticle" v-text="article.text" v-model="text"></textarea>
+            <textarea name="" id="" cols="30" rows="16" maxlength="1000"  v-if="!newArticle" v-model="text"></textarea>
              <textarea name="" id="" cols="30" rows="16" maxlength="1000"  v-else v-model="text"></textarea>
         </div>
         <div class="btn-box">
@@ -111,12 +111,13 @@ export default {
             this.stateTime = this.$store.state.stateTime  // stateTime 默认值为66  
             this.article = this.$store.state.article[0] 
             if(this.article){ 
-                
+                this.title = this.article.title
+                this.text = this.article.text
+
                 this.newArticle = false
                 
-                console.log(this.newArticle)
             }
-        } catch (error) {
+        } catch (error) { 
             this.editInit()
         } 
     }, 
