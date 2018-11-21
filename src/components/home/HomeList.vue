@@ -9,7 +9,7 @@
             
             <router-link to="/Edit"  
                 v-for="(item, index) in items.pages" 
-                :key="item.id" 
+                :key="item.id/1" 
             >
                 <div class="list-item" @click="checkLink(item.id)">
                     <div class="item-data">

@@ -3,10 +3,9 @@
         <div class="cover" v-show="cover">
             <div class="box-check">
                 <span>{{btnInfo}}</span>
-                <div class="check-btn"> 
-                    <router-link to="/">
-                        <button class="iconfont mGreen">&#xe650;</button>
-                    </router-link>
+                <div class="check-btn">  
+                    <button class="iconfont mGreen" @click="sureClick">&#xe650;</button>
+                    
                     <button class="iconfont mRed" @click="cancelCover">&#xe658;</button>
                 </div>
             </div>
@@ -32,8 +31,8 @@
                 <span class="time" v-else>{{stateTime.time}} - {{stateTime.week}}</span>
             </div>
             <div>
-                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="unstar" v-if="!newArticle">&#xe601;</button>
-                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="star" v-else>&#xe600;</button>
+                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="unstar" v-if="article.isStar">1&#xe601;</button>
+                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="star" v-else>2&#xe600;</button>
                 <button class="iconfont mGreen " @click="checkCover" data-key="complete">完成了</button>
                 <button class="iconfont mRed " @click="checkCover" data-key="umcomplete">没完成</button>
             </div>
@@ -47,7 +46,7 @@ export default {
     data:function(){
         return {
             cover: false,
-            article:{},
+            article:{isStar:true},
             information:"收藏",
             active: true, 
             newArticle:true,
@@ -65,18 +64,30 @@ export default {
             isStar:false,
             
         }
+    }, 
+    watch:{
+        isStar(){
+            return this.article.isStar
+        }
     },
     methods:{
         checkCover(e){
             // 点击取消编辑 弹出模态框
 
-            var state = e.target.getAttribute("data-key")   
+            var state = e.target.getAttribute("data-key")    
             if(state == "star" || state == "unstar"){ 
                 this.starThis() 
             }else{
                 switch(state){
-                    case "save":this.btnInfo = "保存成功！是否返回首页？"
-                                this.$store.commit("addNewItem")
+                    case "save":this.btnInfo = "保存成功！是否返回首页？" 
+                                if(!this.createObj()){
+                                    alert("error:title or text cant be null!")
+                                    return
+                                }else{
+                                    var obj = this.createObj()
+                                    this.$store.commit("addNewItem", obj)
+                                }
+                             //   this.$store.commit("addNewItem")
                                 break
                     case "cancle":this.btnInfo = "您确定要放弃编辑吗？(确定将返回首页)"
                                 break
@@ -98,26 +109,60 @@ export default {
         },
         editInit(){
             console.log(this.$store.state.stateTime)
-            this.date = this.$store.state.stateTime.time
-            this.week = this.$store.state.stateTime.week
-            this.id = this.$store.state.stateTime.id 
+            this.date = this.stateTime.time
+            this.week = this.stateTime.week
+             
+            this.id = Date.now()  
+        }, 
+        createObj(){
+            var that = this  
+            
+            if(this.title == "" || this.text == ""){
+                return false 
+            }else{
+                var obj = {
+                    "id": that.id,
+                    "date": that.date,
+                    "week": that.week,
+                    "state": that.state,
+                    "complete": false,
+                    "uncomplete": true,
+                    "isStar": false,
+                    "title": that.title,
+                    "text": that.text
+                }   
+                return obj
+            }
+
+        },
+        sureClick(){
+
+            this.$router.push("/")
         }
     },
     mounted() { 
+        this.stateTime = this.$store.state.stateTime  // stateTime 默认值为  
         
         try {  
+            console.log("enter try")
             // 从系统拿数据 没有传数据就执行初始化
-            // 放到这里没输出 控制台什么也没有 
-            this.stateTime = this.$store.state.stateTime  // stateTime 默认值为66  
-            this.article = this.$store.state.article[0] 
+            // 放到这里没输出 控制台什么也没有  
+            
+            this.editInit()
+            this.article = this.$store.state.article[0]
+            
+            console.log(this.article)
+ 
+             
             if(this.article){ 
                 this.title = this.article.title
-                this.text = this.article.text
-
+                this.text = this.article.text 
                 this.newArticle = false
                 
             }
+            
         } catch (error) { 
+            console.log("enter catch")
             this.editInit()
         } 
     }, 
