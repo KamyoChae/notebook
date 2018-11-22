@@ -1,6 +1,13 @@
 export default {
     filterFn(state, val) {
-        state.rederArr = []
+        
+        state.rederArr = [] // renderArr 只是临时的渲染数组
+
+        /**
+         * 通过传入不同的值 渲染出不同的结果 
+         * 将筛选出来的键值对封装到一个临时对象obj里面
+         * 然后push进rederArr这个临时数组完成渲染
+         */
         var item = null
         var obj = {}
         state.res.forEach(ele => { // 遍历列表
@@ -19,13 +26,14 @@ export default {
             }
 
             if (JSON.stringify(obj) !== "{}") {
+
+                // 如果这个obj里面有值 
                 state.rederArr.push(obj)
                 obj = {}
                 item = null
             }
         })
     },
-    
  
     showAll(state) {
         state.rederArr = state.res
@@ -35,11 +43,11 @@ export default {
         var item = null 
         state.res.forEach(ele => { // 遍历列表
             if (Object.prototype.toString.call(ele.pages) == "[object Array]") { // 如果列表里面的pages属性是一个数组的话
-                item = ele.pages.filter(el => el["id"] === val) 
+                item = ele.pages.filter(el => el["id"] === val) // 筛选出这个id匹配的对象
                 if (item.toString()) { // 容错处理 
                     state.newId = val    // 拿出id
-                    state.article = item  
-                    // console.log(state.article)
+                    state.article = item  // 拿出对象 放到article里面用于 edit.Vue界面的渲染
+                    // console.log(state.newId)
                 }
             }
         }) 
@@ -56,19 +64,22 @@ export default {
             console.log(555)
             var indexs = state.indexArticle.indexs
             var index = state.indexArticle.index
-            console.log(index, indexs)
+            // 将拿到的位置提出来 然后直接切换是否收藏或是取消收藏
+            console.log(indexs, index)
            
-            var flag = state.rederArr[indexs].pages[index]["isStar"]
+            var flag = state.res[indexs].pages[index]["isStar"]
             console.log(flag)
-            state.rederArr[indexs].pages[index]["isStar"] = !state.rederArr[indexs].pages[index]["isStar"] 
-            
+            state.res[indexs].pages[index]["isStar"] = !state.res[indexs].pages[index]["isStar"] 
+           
+
+            // 这里要重新存储一下数据到本地localStorage
         } catch (error) {
                 
         }
    
     },
     getIndexArticle(state){
-        var val = state.newId 
+        var val = state.newId // 拿到这篇文章的id 遍历res原始数组 获取到它在原始数组里面的位置 
         var item = null 
         state.res.forEach((ele, indexs) => { // 遍历列表
             if (Object.prototype.toString.call(ele.pages) == "[object Array]") { // 如果列表里面的pages属性是一个数组的话

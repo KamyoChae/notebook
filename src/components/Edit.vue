@@ -61,12 +61,13 @@ export default {
             state:"执行中", 
             complete:false,
             uncomplete:true,
-            isStar:false,
-            
+            isStar:"",
+            checkFlag:true, // 用于单例模式验证重复标题
         }
     }, 
     watch:{
         isStar(){
+            console.log(this.article.isStar)
             return this.article.isStar
         }
     },
@@ -78,11 +79,25 @@ export default {
             if(state == "star" || state == "unstar"){ 
                 this.starThis() 
             }else{
-                switch(state){
-                    case "save":this.btnInfo = "保存成功！是否返回首页？" 
-                                this.saveFn()
-                             //   this.$store.commit("addNewItem")
-                                break
+                if(state == "save"){
+                    var obj = this.createObj()  // 创建渲染模板
+                    this.id = Date.now()   // 点击保存的同时创建一个id
+                    this.checkFlag = true // 单例模式
+                    this.checkSaveChange() // 验证 如果是false 则表示已存在 
+                    if(this.checkFlag){
+                        if(!obj){
+                            alert("error:title or text cant be null!")
+                            return
+                        }else{
+                            this.$store.commit("addNewItem", obj)
+                        } 
+                        this.btnInfo = "保存成功！是否返回首页？"  
+                    }else{
+                        this.btnInfo = "保存失败，标题已存在！是否返回首页？"  
+                    }
+                    
+                }
+                switch(state){ 
                     case "cancle":this.btnInfo = "您确定要放弃编辑吗？(确定将返回首页)"
                                 break
                     case "complete":this.btnInfo = "任务完成！是否返回首页？"
@@ -94,16 +109,16 @@ export default {
                 
             }  
         },
-        saveFn(){
-            
-            var obj = this.createObj()
-            if(!obj){
-                alert("error:title or text cant be null!")
-                return
-            }else{
-                this.$store.commit("addNewItem", obj)
-            }
-        },
+        checkSaveChange(){
+            // 保存时验证是否已经存在标题文件
+            var title = this.title 
+            var newArr = this.$store.state.res[0].pages  
+            newArr.forEach(ele => {  
+                if(ele.title === title){ 
+                    this.checkFlag = false
+                }
+            }); 
+        }, 
         cancelCover(){
             // 模态框取消 返回继续编辑
             this.cover = false
@@ -111,14 +126,13 @@ export default {
         starThis(){
             this.$store.commit("toStar") 
         },
-        editInit(){
-            console.log(this.$store.state.stateTime)
+        editInit(){ 
             this.date = this.stateTime.time
-            this.week = this.stateTime.week
-             
-            this.id = Date.now()  
+            this.week = this.stateTime.week 
+           
         }, 
         createObj(){
+            // 创建渲染模板
             var that = this  
             
             if(this.title == "" || this.text == ""){
@@ -147,27 +161,21 @@ export default {
     mounted() { 
         this.stateTime = this.$store.state.stateTime  // stateTime 默认值为  
         
-        try {  
-            console.log("enter try")
+        try {
             // 从系统拿数据 没有传数据就执行初始化
             // 放到这里没输出 控制台什么也没有  
             
-            this.editInit()
-            console.log(this.$store.state)
-            this.article = this.$store.state.article[0]
-            
-            console.log(this.article)
- 
-             
+            this.editInit() 
+            this.article = this.$store.state.article[0] 
+
+            console.log(this.article.isStar)
             if(this.article){ 
                 this.title = this.article.title
                 this.text = this.article.text 
-                this.newArticle = false
-                
+                this.newArticle = false 
             }
             
-        } catch (error) { 
-            console.log("enter catch")
+        } catch (error) {  
             this.editInit()
         } 
     }, 

@@ -76,19 +76,19 @@ export default {
             "text": "文章内容在这里..."
         }]
     }],
-    rederArr: [], // 渲染数组 
+    rederArr: [], // 临时的渲染数组 
     article: [{
         "id": "201561119",
-        "date": "2018/10/02",
-        "week": "星期三",
+        "date": "2018/01/01",
+        "week": "星期一",
         "state": "执行中",
         "complete": true,
         "uncomplete": true,
         "isStar": false,
-        "title": "aa新一下博客博客博客",
-        "text": "文章内容在这里..."
+        "title": "",
+        "text": ""
     }], //存储文章数组
-    stateTime:{time:"这么机智的嘛",week:"哟" }, // 存储文本创建时间
+    stateTime:{time:"2018/01/01",week:"星期一" }, // 存储文本创建时间
     indexArticle:{}, // 用于收藏 标识 里面有两个索引 第一个是时间索引 第二个是位置索引
     newId:"", // 点击文章后更新的文章id
 }

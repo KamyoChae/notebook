@@ -46,15 +46,15 @@ export default {
          * 第二个indexs 多了个s 代表日期 
          */
         clickStar(index, indexs){
-            var isStar = this.$store.state.rederArr[indexs].pages[index].isStar 
-            this.$store.state.rederArr[indexs].pages[index].isStar = !isStar 
+            var isStar = this.$store.state.res[indexs].pages[index].isStar 
+            this.$store.state.res[indexs].pages[index].isStar = !isStar 
         },
         deleteItem(index, indexs){
             var pages = this.$store.state.rederArr[indexs].pages 
             pages.splice(index, 1)
         },
 
-        checkLink(val){ 
+        checkLink(val){ // 拿到该列表的唯一标识符 id
             this.$store.commit("clickArticle", val) 
         }
          
