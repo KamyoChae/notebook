@@ -31,7 +31,7 @@
                 <span class="time" v-else>{{stateTime.time}} - {{stateTime.week}}</span>
             </div>
             <div>
-                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="unstar" v-if="article.isStar">1&#xe601;</button>
+                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="unstar" v-if="isStar">1&#xe601;</button>
                 <button class="iconfont mYellow font-larg" @click="checkCover" data-key="star" v-else>2&#xe600;</button>
                 <button class="iconfont mGreen " @click="checkCover" data-key="complete">完成了</button>
                 <button class="iconfont mRed " @click="checkCover" data-key="umcomplete">没完成</button>
@@ -46,7 +46,7 @@ export default {
     data:function(){
         return {
             cover: false,
-            article:{isStar:true},
+            article:"",
             information:"收藏",
             active: true, 
             newArticle:true,
@@ -80,13 +80,7 @@ export default {
             }else{
                 switch(state){
                     case "save":this.btnInfo = "保存成功！是否返回首页？" 
-                                if(!this.createObj()){
-                                    alert("error:title or text cant be null!")
-                                    return
-                                }else{
-                                    var obj = this.createObj()
-                                    this.$store.commit("addNewItem", obj)
-                                }
+                                this.saveFn()
                              //   this.$store.commit("addNewItem")
                                 break
                     case "cancle":this.btnInfo = "您确定要放弃编辑吗？(确定将返回首页)"
@@ -99,6 +93,16 @@ export default {
                 this.cover = true
                 
             }  
+        },
+        saveFn(){
+            
+            var obj = this.createObj()
+            if(!obj){
+                alert("error:title or text cant be null!")
+                return
+            }else{
+                this.$store.commit("addNewItem", obj)
+            }
         },
         cancelCover(){
             // 模态框取消 返回继续编辑
@@ -149,6 +153,7 @@ export default {
             // 放到这里没输出 控制台什么也没有  
             
             this.editInit()
+            console.log(this.$store.state)
             this.article = this.$store.state.article[0]
             
             console.log(this.article)

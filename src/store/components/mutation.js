@@ -49,8 +49,7 @@ export default {
          * 拿到这篇文章的id 遍历对象找出当前文章的索引 然后直接赋值
          */
         
-        state.indexArticle = {}  
-        
+        state.indexArticle = {}   
         this.commit("getIndexArticle")
         try {
              
@@ -117,7 +116,7 @@ export default {
          
         if(mIndex != "-"){ 
             // if mIndex has a index code 
-           state.res[mIndex]["pages"].push(value)  
+           state.res[mIndex]["pages"].unshift(value)  
         }else{
             // need to create a obj 
             var mObj = {
