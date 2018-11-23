@@ -5,18 +5,17 @@
                 <i class="iconfont">&#xe665;</i>
                 <i>{{items.allDate}}</i>
             </div>
-
             
-            <router-link to="/Edit"  
+            <router-link to="/Edit"
                 v-for="(item, index) in items.pages" 
-                :key="item.id/1" 
+                :key="item.id"
             >
                 <div class="list-item" @click="checkLink(item.id)">
                     <div class="item-data">
                         <span>{{item.date}}</span>
                         <span>{{item.week}}</span>
                         <span>当前状态</span>
-                        <span>{{item.state}}</span> 
+                        <span>{{item.state}}</span>
                     </div>
                     <p>{{item.title}}</p>
                     <div class="delete-box" >
@@ -48,18 +47,26 @@ export default {
         clickStar(index, indexs){
             var isStar = this.$store.state.res[indexs].pages[index].isStar 
             this.$store.state.res[indexs].pages[index].isStar = !isStar 
+            this.$store.commit("setStorage")
         },
         deleteItem(index, indexs){
-            var pages = this.$store.state.rederArr[indexs].pages 
+            var pages = this.$store.state.res[indexs].pages 
             pages.splice(index, 1)
+            console.log(pages)
+            this.$store.commit("setStorage")
         },
 
         checkLink(val){ // 拿到该列表的唯一标识符 id
             this.$store.commit("clickArticle", val) 
-        }
+        },
+        getStorage(){
+            this.$store.state.res = localStorage.getItem("notBook")
+        },
          
-    }, 
+    },
+   
     mounted() {
+        this.getStorage()
         this.$store.state.rederArr = this.$store.state.res
     },
 

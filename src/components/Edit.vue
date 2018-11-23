@@ -31,10 +31,10 @@
                 <span class="time" v-else>{{stateTime.time}} - {{stateTime.week}}</span>
             </div>
             <div>
-                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="unstar" v-if="isStar">1&#xe601;</button>
-                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="star" v-else>2&#xe600;</button>
+                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="unstar" v-if="isStar">&#xe601;</button>
+                <button class="iconfont mYellow font-larg" @click="checkCover" data-key="star" v-else>&#xe600;</button>
                 <button class="iconfont mGreen " @click="checkCover" data-key="complete">完成了</button>
-                <button class="iconfont mRed " @click="checkCover" data-key="umcomplete">没完成</button>
+                <button class="iconfont mRed " @click="checkCover" data-key="uncomplete">没完成</button>
             </div>
         </div>
     </div>
@@ -64,67 +64,102 @@ export default {
             isStar:"",
             checkFlag:true, // 用于单例模式验证重复标题
         }
-    }, 
-    watch:{
-        isStar(){
-            console.log(this.article.isStar)
-            return this.article.isStar
-        }
-    },
+    },  
     methods:{
         checkCover(e){
             // 点击取消编辑 弹出模态框
 
             var state = e.target.getAttribute("data-key")    
             if(state == "star" || state == "unstar"){ 
+                this.isStar = !this.isStar 
+                console.log(this.isStar)
+                // 上面这一步十分重要 原因是vuex数据改变的时候 页面不会刷新 但vuex里面的数据已经改变了 所以只能在这里假装切换了
+                // 其实有一个不全面的解决办法 就是这个isStar写在state里面 渲染if判断条件就直接用这个
+                // 但如果这样的话 页面会报错 比如第一次加载这个页面的时候回找不到对应的数据 或是 报错
                 this.starThis() 
             }else{
                 if(state == "save"){
+                    this.id = Date.now()   // 点击保存的同时创建一个id 
                     var obj = this.createObj()  // 创建渲染模板
-                    this.id = Date.now()   // 点击保存的同时创建一个id
                     this.checkFlag = true // 单例模式
                     this.checkSaveChange() // 验证 如果是false 则表示已存在 
                     if(this.checkFlag){
                         if(!obj){
-                            alert("error:title or text cant be null!")
+                            alert("error:标题或内容不能为空！")
                             return
                         }else{
                             this.$store.commit("addNewItem", obj)
+                            this.btnInfo = "保存成功！是否返回首页？"
                         } 
-                        this.btnInfo = "保存成功！是否返回首页？"  
+                          
                     }else{
                         this.btnInfo = "保存失败，标题已存在！是否返回首页？"  
                     }
                     
+                this.cover = true
+                }
+                if(state == "complete"){
+                    this.completeUp("complete")
+                }
+                if(state == "uncomplete"){
+                    console.log(0)
+                    this.completeUp("uncomplete")
                 }
                 switch(state){ 
                     case "cancle":this.btnInfo = "您确定要放弃编辑吗？(确定将返回首页)"
-                                break
-                    case "complete":this.btnInfo = "任务完成！是否返回首页？"
-                                break
-                    case "umcomplete":this.btnInfo = "任务取消！是否返回首页？"
-                                break
-                } 
-                this.cover = true
+                                break   
+                }
                 
             }  
+        },
+        completeUp(val){ 
+            var flag = true
+            flag = this.checkNull()
+            console.log(flag + ">> up")
+            if(flag){
+                if(val == "complete"){
+
+                    this.btnInfo = "任务完成！是否返回首页？"   
+                    this.$store.commit("toClickUp", "complete")  
+                }else if(val == "uncomplete"){
+                    this.btnInfo = "任务失败！是否返回首页？"
+                    this.$store.commit("toClickUp", "uncomplete")  
+                }
+                
+                this.cover = true
+            }else{
+                alert("error:标题或内容不能为空！")
+            }
+        },
+        checkNull(){ 
+            if(this.title == "" || this.text == ""){
+                return false 
+            }else{
+                return true
+            }
         },
         checkSaveChange(){
             // 保存时验证是否已经存在标题文件
             var title = this.title 
-            var newArr = this.$store.state.res[0].pages  
-            newArr.forEach(ele => {  
-                if(ele.title === title){ 
-                    this.checkFlag = false
-                }
-            }); 
+            try {
+                var newArr = this.$store.state.res[0].pages  
+                console.log(newArr)
+                newArr.forEach(ele => {  
+                    if(ele.title === title){ 
+                        this.checkFlag = false
+                    }
+                }); 
+            } catch (error) {
+                
+            }
+        
         }, 
         cancelCover(){
             // 模态框取消 返回继续编辑
             this.cover = false
         },  
         starThis(){
-            this.$store.commit("toStar") 
+            this.$store.commit("toClickUp", "isStar") 
         },
         editInit(){ 
             this.date = this.stateTime.time
@@ -160,7 +195,7 @@ export default {
     },
     mounted() { 
         this.stateTime = this.$store.state.stateTime  // stateTime 默认值为  
-        
+        console.log(this.$store.state.res)
         try {
             // 从系统拿数据 没有传数据就执行初始化
             // 放到这里没输出 控制台什么也没有  
@@ -172,7 +207,8 @@ export default {
             if(this.article){ 
                 this.title = this.article.title
                 this.text = this.article.text 
-                this.newArticle = false 
+                this.isStar = this.article.isStar
+                this.newArticle = false // 如果是点击文章列表 就显示预定的文章内容 false表示点击的是列表
             }
             
         } catch (error) {  
