@@ -95,7 +95,7 @@ export default {
         width 70%
         margin auto
         .btn-box 
-            display inline-block 
+            display inline-block  
         button
             $btn()
         button:hover
