@@ -1,5 +1,6 @@
 # notebook
 A notebook made with vue. 利用vue做的一个记事本 
+![查看效果](https://kamyochae.github.io/notebook/)
 
 
 # 以下是自己画的UI图
