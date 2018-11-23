@@ -72,7 +72,7 @@ export default {
             var state = e.target.getAttribute("data-key")    
             if(state == "star" || state == "unstar"){ 
                 this.isStar = !this.isStar 
-                console.log(this.isStar)
+               
                 // 上面这一步十分重要 原因是vuex数据改变的时候 页面不会刷新 但vuex里面的数据已经改变了 所以只能在这里假装切换了
                 // 其实有一个不全面的解决办法 就是这个isStar写在state里面 渲染if判断条件就直接用这个
                 // 但如果这样的话 页面会报错 比如第一次加载这个页面的时候回找不到对应的数据 或是 报错
@@ -101,8 +101,7 @@ export default {
                 if(state == "complete"){
                     this.completeUp("complete")
                 }
-                if(state == "uncomplete"){
-                    console.log(0)
+                if(state == "uncomplete"){ 
                     this.completeUp("uncomplete")
                 }
                 switch(state){ 
@@ -114,8 +113,7 @@ export default {
         },
         completeUp(val){ 
             var flag = true
-            flag = this.checkNull()
-            console.log(flag + ">> up")
+            flag = this.checkNull() 
             if(flag){
                 if(val == "complete"){
 
@@ -142,8 +140,7 @@ export default {
             // 保存时验证是否已经存在标题文件
             var title = this.title 
             try {
-                var newArr = this.$store.state.res[0].pages  
-                console.log(newArr)
+                var newArr = this.$store.state.res[0].pages   
                 newArr.forEach(ele => {  
                     if(ele.title === title){ 
                         this.checkFlag = false
@@ -194,16 +191,14 @@ export default {
         }
     },
     mounted() { 
-        this.stateTime = this.$store.state.stateTime  // stateTime 默认值为  
-        console.log(this.$store.state.res)
+        this.stateTime = this.$store.state.stateTime  // stateTime 默认值为   
         try {
             // 从系统拿数据 没有传数据就执行初始化
             // 放到这里没输出 控制台什么也没有  
             
             this.editInit() 
             this.article = this.$store.state.article[0] 
-
-            console.log(this.article.isStar)
+ 
             if(this.article){ 
                 this.title = this.article.title
                 this.text = this.article.text 

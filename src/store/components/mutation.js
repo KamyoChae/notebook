@@ -50,8 +50,7 @@ export default {
                
                 item = ele.pages.filter(el => el["id"] === val) // 筛选出这个id匹配的对象
                  
-                if (item.length != 0) { // 容错处理 
-                    console.log(item)
+                if (item.length != 0) { // 容错处理  
                     state.newId = val    // 拿出id
                     state.article = item  // 拿出对象 放到article里面用于 edit.Vue界面的渲染
                 }else{
@@ -88,8 +87,7 @@ export default {
                 state.res[indexs].pages[index][val] = true // 表示已经完成
                 state.res[indexs].pages[index]["state"] = "未完成" // 表示未完成
                 state.res[indexs].pages[index]["complete"] = false // 表示已经完成
-            }
-           console.log(state.res[indexs].pages[index])
+            } 
 
             // 这里要重新存储一下数据到本地localStorage
             // console.log("开始存储数据")
@@ -158,7 +156,7 @@ export default {
                     "pages":[value]
                 }
                 
-            console.log("push进res")
+            // console.log("push进res")
                 state.res.unshift(mObj) 
                 this.commit("setStorage")
         
