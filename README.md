@@ -1,5 +1,5 @@
 # notebook
-A notebook made with vue. 利用vue做的一个记事本 
+A notebook made with vue. 利用vue做的一个SPA记事本 
 [PC端查看效果](https://kamyochae.github.io/notebook/)
 
 
