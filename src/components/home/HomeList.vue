@@ -51,8 +51,7 @@ export default {
         },
         deleteItem(index, indexs){
             var pages = this.$store.state.res[indexs].pages 
-            pages.splice(index, 1)
-            console.log(pages)
+            pages.splice(index, 1) 
             this.$store.commit("setStorage")
         },
 
@@ -60,14 +59,39 @@ export default {
             this.$store.commit("clickArticle", val) 
         },
         getStorage(){
-            this.$store.state.res = localStorage.getItem("notBook")
+            var data = localStorage.getItem("notBook")  
+            this.$store.state.res = JSON.parse(data)
         },
          
     },
    
     mounted() {
-        this.getStorage()
-        this.$store.state.rederArr = this.$store.state.res
+        var storage = localStorage.getItem("notBook")
+       
+        if(!storage){ 
+            // console.log("进入初始化阶段...")
+            var res = [
+                        {
+                        "allDate": "2018/09",
+                        "pages": [{
+                            "id": "20154619",
+                            "date": "2018/10/02",
+                            "week": "星期三",
+                            "state": "执行中",
+                            "complete": false,
+                            "uncomplete": true,
+                            "isStar": true,
+                            "title": "嘿！这是一个神奇的记事本",
+                            "text": "嘿！你好呀！这是一个神奇的记事本，你可以在这里记录一些将来的事情，比如接下来要做什么、明天要做什么，也可以把它当日记来用，写一写心事，或是记一记各种千奇百怪的经历...总之，在这里的数据都是存储在你的浏览器上面的，除非是你手动删除了浏览器的数据或是卸载了这个浏览器，你写的东西才会消失，所以啊，在这里你大可放心去写东西"
+                        }]
+                    }]
+            this.$store.state.res = res
+            this.$store.state.rederArr = res
+        }else{
+            // console.log("本地有存储...读取")
+            this.getStorage()
+            this.$store.state.rederArr = this.$store.state.res
+        }
     },
 
 }

@@ -44,8 +44,7 @@ export default {
     },
     clickArticle(state, val) { 
         state.article = null
-        var item = null 
-        console.log(val)
+        var item = null  
         state.res.forEach(ele => { // 遍历列表
             if (Object.prototype.toString.call(ele.pages) == "[object Array]") { // 如果列表里面的pages属性是一个数组的话
                
@@ -56,7 +55,7 @@ export default {
                     state.newId = val    // 拿出id
                     state.article = item  // 拿出对象 放到article里面用于 edit.Vue界面的渲染
                 }else{
-                    console.log("没有找到id匹配的item")
+                    // console.log("没有找到id匹配的item")
                 }
             }
 
@@ -67,7 +66,6 @@ export default {
         /**
          * 拿到这篇文章的id 遍历对象找出当前文章的索引 然后直接赋值
          */
-        
         var mId = state.newId // 拿到这篇文章的id 遍历res原始数组 获取到它在原始数组里面的位置 
         this.commit("getIndexArticle", mId)
         try {
@@ -75,8 +73,7 @@ export default {
             var indexs = state.indexArticle.indexs
             var index = state.indexArticle.index
             // 将拿到的位置提出来 然后直接切换是否收藏或是取消收藏
-            console.log(indexs, index)
-           console.log(val + ">>>val")
+            // console.log(indexs, index) 
             if(val == "isStar"){ 
                 // 如果是点击了 star
                 var flag = state.res[indexs].pages[index][val] 
@@ -95,7 +92,7 @@ export default {
            console.log(state.res[indexs].pages[index])
 
             // 这里要重新存储一下数据到本地localStorage
-            console.log("开始存储数据")
+            // console.log("开始存储数据")
             this.commit("setStorage")
         } catch (error) {
                 
@@ -103,8 +100,7 @@ export default {
    
     },
     getIndexArticle(state, val){
-         
-        
+          
         state.indexArticle = {}    
         state.res.forEach((ele, indexs) => { // 遍历列表
             if (Object.prototype.toString.call(ele.pages) == "[object Array]") { // 如果列表里面的pages属性是一个数组的话
@@ -141,22 +137,17 @@ export default {
         var mIndex = "-" 
         var flagNow =  Date.now() 
         var checkNow = flagNow
-        try {
-           
-            state.res.forEach((eles, indexs) => {
-            
-                if(eles["allDate"].indexOf(allDate) != -1){
-                   
-                    if(flagNow == checkNow){
-                       
+        try { 
+            state.res.forEach((eles, indexs) => { 
+                if(eles["allDate"].indexOf(allDate) != -1){ 
+                    if(flagNow == checkNow){ 
                         checkNow = Date.now() 
                         mIndex = indexs  
                     } 
                 } 
     
             }) 
-       
-            console.log(555)
+        
             if(mIndex != "-"){ 
                 // if mIndex has a index code 
             state.res[mIndex]["pages"].unshift(value)  
@@ -166,9 +157,9 @@ export default {
                     "allDate":allDate,
                     "pages":[value]
                 }
-            
-                state.res.unshift(mObj)
-                console.log(state.res) 
+                
+            console.log("push进res")
+                state.res.unshift(mObj) 
                 this.commit("setStorage")
         
 
@@ -178,7 +169,8 @@ export default {
         }
     },
     setStorage(state){
-        var data = state.res
+        // console.log("正在建立存储空间。。。") 
+        var data =  JSON.stringify(state.res) 
         localStorage.removeItem("notBook")
         localStorage.setItem("notBook",data)
     },
