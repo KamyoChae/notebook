@@ -68,14 +68,14 @@ export default {
     mounted() {
         var storage = localStorage.getItem("notBook")
        
-        if(!storage){ 
+        if(!storage){
             // console.log("进入初始化阶段...")
             var res = [
                         {
                         "allDate": "2018/09",
                         "pages": [{
                             "id": "20154619",
-                            "date": "2018/10/02",
+                            "date": "2018/09/02",
                             "week": "星期三",
                             "state": "执行中",
                             "complete": false,

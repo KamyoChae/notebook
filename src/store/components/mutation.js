@@ -1,3 +1,5 @@
+import { stat } from "fs";
+
 export default {
     filterFn(state, val) {
         
@@ -125,7 +127,7 @@ export default {
         /**
          * create full years and render a obj input to rederArr
          */
-
+        console.log(value)
         var date = new Date()
         var years = date.getFullYear()
         var month = date.getMonth() + 1
@@ -148,7 +150,9 @@ export default {
         
             if(mIndex != "-"){ 
                 // if mIndex has a index code 
-            state.res[mIndex]["pages"].unshift(value)  
+            state.res[mIndex]["pages"].unshift(value)
+            
+            this.commit("setStorage") 
             }else{
                 // need to create a obj 
                 var mObj = {
@@ -158,16 +162,16 @@ export default {
                 
             // console.log("push进res")
                 state.res.unshift(mObj) 
-                this.commit("setStorage")
-        
-
+                this.commit("setStorage") 
             }
+            console.log(55)
         } catch (error) {
                 
         }
     },
     setStorage(state){
-        // console.log("正在建立存储空间。。。") 
+        console.log("正在建立存储空间。。。") 
+        console.log(state.res)
         var data =  JSON.stringify(state.res) 
         localStorage.removeItem("notBook")
         localStorage.setItem("notBook",data)

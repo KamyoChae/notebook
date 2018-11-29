@@ -88,6 +88,7 @@ export default {
                             alert("error:标题或内容不能为空！")
                             return
                         }else{
+                            
                             this.$store.commit("addNewItem", obj)
                             this.btnInfo = "保存成功！是否返回首页？"
                         } 
