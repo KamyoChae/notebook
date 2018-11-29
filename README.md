@@ -1,5 +1,18 @@
 # notebook
-A notebook made with vue. 利用vue做的一个记事本 
+A notebook made with vue. 利用vue做的一个SPA记事本 
+[PC端查看效果](https://kamyochae.github.io/notebook/)
+
+
+### 技术栈
+- vue + vue-router + vuex + vue-cli + webpack 
+- localStorage
+- H5
+- CSS3
+- ES6
+
+
+       $ npm install
+       $ npm run dev
 
 
 # 以下是自己画的UI图
