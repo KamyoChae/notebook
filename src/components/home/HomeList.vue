@@ -39,7 +39,7 @@ export default {
     },
     methods:{
 
-        /**
+        /** javascript
          * 这里用两个index
          * 第一个 index 代表列表的索引
          * 第二个indexs 多了个s 代表日期 
